@@ -1,0 +1,19 @@
+.img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+}
+
+.img:active {
+  transform: scale(0.95);
+}
+
+.divContainer {
+  margin: 0 !important;
+}
+
+.dropdownCategories {
+  margin-right: -150px;
+}

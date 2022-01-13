@@ -1,0 +1,15 @@
+.pagination {
+  margin: 5% 5% 8%;
+}
+
+@media (min-width: 481px) and (max-width: 600px) {
+  .pagination {
+    margin-bottom: 20%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    margin-bottom: 20%;
+  }
+}

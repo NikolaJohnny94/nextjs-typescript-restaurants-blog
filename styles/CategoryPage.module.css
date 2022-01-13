@@ -1,0 +1,19 @@
+.div {
+  margin-bottom: 5%;
+}
+
+.pagination {
+  margin: 5% 5% 8%;
+}
+
+@media (min-width: 768px) {
+  .div {
+    margin-bottom: 8%;
+  }
+}
+
+@media (max-width: 480px) {
+  .div {
+    margin-bottom: 17%;
+  }
+}
