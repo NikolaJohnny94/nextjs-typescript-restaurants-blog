@@ -83,7 +83,6 @@ export const getStaticProps: GetStaticProps = async () => {
             name: 'description',
             content: 'Restaurants blog 🍴🍝🍰☕ made with Next.js ▶️ TypeScript 📜 and ReactBootstrap ⚛️🥾 | Fetching data from the Strapi.io API 🚀',
           },
-
         ],
       },
     }

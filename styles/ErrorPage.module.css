@@ -15,11 +15,21 @@
 }
 
 .errorH1 {
+  font-size: 24px;
   z-index: auto;
   text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.6),
     3.5px 3.5px 3.5px rgba(255, 255, 255, 0.6);
 }
 
 .errorSpan {
-  font-size: 40px !important;
+  font-size: 36px !important;
+}
+
+@media (max-width: 480px) {
+  .errorH1 {
+    font-size: 18px;
+  }
+  .errorSpan {
+    font-size: 24px !important;
+  }
 }
