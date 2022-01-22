@@ -27,7 +27,7 @@ const InternalServerErrorPage: NextPage = ({ HeadProps }: InferGetStaticPropsTyp
         <Layout categories={categories} title={HeadProps.title} description={HeadProps.metas[0].content} imgURL={errorPage}>
             <div className={styles.errorContainer}></div>
             <Row className={styles.errorRow}>
-                <h1 className={`${styles.errorH1} mt-2 text-danger text-center `}>500 | Internal Server Errord</h1>
+                <h1 className={`${styles.errorH1} mt-2 text-danger text-center `}>500 | Internal Server Error</h1>
                 <span className={`${styles.errorSpan} ms-2 text-danger text-center`}>
                     <FontAwesomeIcon icon={faRobot} size='sm' />
                 </span>
