@@ -1,7 +1,8 @@
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import CategoryContext from '../../../context/category/categoryContext'
+import ImageContext from '../../../context/imgs/imageContext'
 import { NextPage, GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next'
-import Head from 'next/head'
 import { useRouter, NextRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
@@ -13,9 +14,15 @@ import CardComponent from '../../../components/CardComponent'
 import Layout from '../../../components/Layout'
 import styles from '../../../styles/CategoryPage.module.css'
 
-const Category: NextPage = ({ category, HeadProps, allCategories }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Category: NextPage = ({ category, HeadProps }: InferGetStaticPropsType<typeof getStaticProps>) => {
+
     const router: NextRouter = useRouter()
-    const imgURL: string = 'https://images.unsplash.com/photo-1478144592103-25e218a04891?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1375&q=80'
+
+    const categoryContext = useContext(CategoryContext)
+    const imageContext = useContext(ImageContext)
+
+    const { categories, getCategories } = categoryContext
+    const { categoryPage } = imageContext.images
 
     const [currentItems, setCurrentItems] = useState<InferGetStaticPropsType<typeof getStaticProps>[]>([])
     const [pageCount, setPageCount] = useState<number>(0)
@@ -24,6 +31,9 @@ const Category: NextPage = ({ category, HeadProps, allCategories }: InferGetStat
     const itemsPerPage: number = 8
 
     useEffect(() => {
+        if (categories.length === 0) {
+            getCategories()
+        }
         const endOffset = itemOffset + itemsPerPage
         setCurrentItems(category.restaurants.slice(itemOffset, endOffset))
         setPageCount(Math.ceil(category.restaurants.length / itemsPerPage))
@@ -36,12 +46,7 @@ const Category: NextPage = ({ category, HeadProps, allCategories }: InferGetStat
     }
 
     return (
-        <Layout categories={allCategories}>
-            <Head>
-                <title>{HeadProps.title}</title>
-                <meta name='description' content={HeadProps.metas[0].content} />
-                <meta property='og:image' content={imgURL} />
-            </Head>
+        <Layout categories={categories} title={HeadProps.title} description={HeadProps.metas[0].content} imgURL={categoryPage}>
             <div className={styles.div}>
                 <h1 className='text-center mt-3'><em>#{category.name}</em></h1>
                 <Row>
@@ -76,12 +81,9 @@ const Category: NextPage = ({ category, HeadProps, allCategories }: InferGetStat
 export const getStaticProps: GetStaticProps = async (ctx: any) => {
     const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories/${ctx.params.id}`)
     const category = categoriesResponse.data
-    const allCategoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
-    const allCategories = allCategoriesResponse.data
     return {
         props: {
             category,
-            allCategories,
             HeadProps: {
                 title: `${category.name} 🍴👨‍🍳 | Next.js ▶️ & Strapi.io App 🚀`,
                 metas: [

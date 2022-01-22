@@ -25,7 +25,12 @@ ul.pagination {
   text-decoration: none;
 }
 
-.dropdown-item:active a {
+.dropdown-menu .dropdown-item {
+  color: #0d6efd !important;
+  font-weight: 400;
+}
+
+.dropdown-item:active {
   color: #fff !important;
 }
 
@@ -98,7 +103,7 @@ span.navbar-brand {
     background-color: transparent;
   }
 
-  .dropdown-item a {
+  .dropdown-menu .dropdown-item {
     color: #fff !important;
   }
 

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { NextPage, GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next'
-import Head from 'next/head'
+import { useContext, useEffect } from 'react'
+import CategoryContext from '../../../context/category/categoryContext'
+import ImageContext from '../../../context/imgs/imageContext'
 import { StaticPaths } from '../../../interfaces/staticpaths.interface'
 import { StaticPathsResponse } from '../../../interfaces/staticpathsresponse.interface'
 import Layout from '../../../components/Layout'
@@ -11,17 +13,22 @@ import styles from '../../../styles/Restaurant.module.css'
 
 
 
-const Restaurant: NextPage = ({ restaurant, HeadProps, categories }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Restaurant: NextPage = ({ restaurant, HeadProps }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
-    const imgURL: string = 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
+    const categoryContext = useContext(CategoryContext)
+    const imageContext = useContext(ImageContext)
+
+    const { categories, getCategories } = categoryContext
+    const { restaurantPage } = imageContext.images
+
+    useEffect(() => {
+        if (categories.length === 0) {
+            getCategories()
+        }
+    }, [])
 
     return (
-        <Layout categories={categories}>
-            <Head>
-                <title>{HeadProps.title}</title>
-                <meta name='description' content={HeadProps.metas[0].content} />
-                <meta property='og:image' content={imgURL} />
-            </Head>
+        <Layout categories={categories} title={HeadProps.title} description={HeadProps.metas[0].content} imgURL={restaurantPage}>
             <div className={styles.div}>
                 <h1 className='text-center m-3'>{restaurant.name}</h1>
                 <CarouselComponent images={restaurant.images} />
@@ -37,12 +44,9 @@ const Restaurant: NextPage = ({ restaurant, HeadProps, categories }: InferGetSta
 export const getStaticProps: GetStaticProps = async (ctx: any) => {
     const restaurantResponse = await axios.get(`${process.env.BASE_URL}/restaurants/${ctx.params.id}`)
     const restaurant = restaurantResponse.data
-    const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
-    const categories = categoriesResponse.data
     return {
         props: {
             restaurant,
-            categories,
             HeadProps: {
                 title: `${restaurant.name} 🍴👨‍🍳 | Next.js ▶️ & Strapi.io App 🚀`,
                 metas: [
