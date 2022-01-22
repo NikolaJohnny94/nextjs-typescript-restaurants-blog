@@ -20,6 +20,7 @@ const InternalServerErrorPage: NextPage = ({ HeadProps }: InferGetStaticPropsTyp
         if (categories.length === 0) {
             getCategories()
         }
+        // eslint-disable-next-line
     }, [])
 
     return (

@@ -24,6 +24,7 @@ const Person: NextPage = ({ person, profileImage, HeadProps }: InferGetStaticPro
         if (categories.length === 0) {
             getCategories()
         }
+        // eslint-disable-next-line
     }, [])
 
     return (

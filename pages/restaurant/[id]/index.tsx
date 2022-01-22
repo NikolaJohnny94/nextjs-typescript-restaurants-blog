@@ -25,6 +25,7 @@ const Restaurant: NextPage = ({ restaurant, HeadProps }: InferGetStaticPropsType
         if (categories.length === 0) {
             getCategories()
         }
+        // eslint-disable-next-line
     }, [])
 
     return (

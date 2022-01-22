@@ -45,7 +45,7 @@ const Home: NextPage = ({ restaurants, HeadProps }: InferGetStaticPropsType<type
     <Layout categories={categories} title={HeadProps.title} description={HeadProps.metas[0].content} imgURL={homePage}>
       <h1 className='text-center mt-4'><em>Restaurants</em></h1>
       <Row>
-        {currentItems.map(restaurant => (<Col xs="12" sm="6" md="4" lg="3" key={restaurant._id}><CardComponent id={restaurant._id} name={restaurant.name} description={restaurant.description} image={restaurant.images[0].name} /></Col>))}
+        {currentItems.map(restaurant => (<Col xs="12" sm="6" md="4" lg="3" key={restaurant._id}><CardComponent id={restaurant._id} name={restaurant.name} description={restaurant.description} image={restaurant.images[0].name} altText={restaurant.images[0].alternativeText} /></Col>))}
       </Row>
       <span className={`${styles.pagination} d-block`}>
         <ReactPaginate

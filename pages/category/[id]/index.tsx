@@ -50,7 +50,7 @@ const Category: NextPage = ({ category, HeadProps }: InferGetStaticPropsType<typ
             <div className={styles.div}>
                 <h1 className='text-center mt-3'><em>#{category.name}</em></h1>
                 <Row>
-                    {currentItems.map(restaurant => (<Col xs="12" sm="6" md="4" lg="3" key={restaurant._id}><CardComponent id={restaurant._id} name={restaurant.name} description={restaurant.description} image={restaurant.images[0].name} /></Col>))}
+                    {currentItems.map(restaurant => (<Col xs="12" sm="6" md="4" lg="3" key={restaurant._id}><CardComponent id={restaurant._id} name={restaurant.name} description={restaurant.description} image={restaurant.images[0].name} altText={restaurant.images[0].alternativeText} /></Col>))}
                 </Row>
                 <span className={`${styles.pagination} d-block`}>
                     <ReactPaginate

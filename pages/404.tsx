@@ -20,6 +20,7 @@ const NotFoundErrorPage: NextPage = ({ HeadProps }: InferGetStaticPropsType<type
         if (categories.length === 0) {
             getCategories()
         }
+        // eslint-disable-next-line
     }, [])
 
     return (
