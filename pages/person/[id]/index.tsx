@@ -1,8 +1,7 @@
 import axios from 'axios'
 import { NextPage, GetStaticProps, InferGetStaticPropsType, GetStaticPaths, } from 'next'
 import { useRouter, NextRouter } from 'next/router'
-import { useContext, useEffect } from 'react'
-import CategoryContext from '../../../context/category/categoryContext'
+import { useContext } from 'react'
 import ImageContext from '../../../context/imgs/imageContext'
 import Button from 'react-bootstrap/Button'
 import { StaticPaths } from '../../../interfaces/staticpaths.interface'
@@ -10,22 +9,13 @@ import { StaticPathsResponse } from '../../../interfaces/staticpathsresponse.int
 import Layout from '../../../components/Layout'
 import styles from '../../../styles/PersonPage.module.css'
 
-const Person: NextPage = ({ person, profileImage, HeadProps }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Person: NextPage = ({ person, profileImage, HeadProps, categories }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
     const router: NextRouter = useRouter()
 
-    const categoryContext = useContext(CategoryContext)
     const imageContext = useContext(ImageContext)
-
-    const { categories, getCategories } = categoryContext
     const { personPage } = imageContext.images
 
-    useEffect(() => {
-        if (categories.length === 0) {
-            getCategories()
-        }
-        // eslint-disable-next-line
-    }, [])
 
     return (
         <Layout categories={categories} title={HeadProps.title} description={HeadProps.metas[0].content} imgURL={personPage}>
@@ -47,11 +37,13 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
     const responsePerson = await axios.get(`${process.env.BASE_URL}/persons/${ctx.params.id}`)
     const person = responsePerson.data
     const profileImage: string = person.profile_image.name
-
+    const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
+    const categories = categoriesResponse.data
     return {
         props: {
             person,
             profileImage,
+            categories,
             HeadProps: {
                 title: `${person.username} ${person.gender === 'male' ? '🧔' : person.gender === 'female' ? '👩' : '🙂'} | Next.js ▶️ & Strapi.io App 🚀`,
                 metas: [

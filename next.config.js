@@ -2,6 +2,6 @@
 module.exports = {
   reactStrictMode: true,
   env: {
-    BASE_URL: '/',
+    BASE_URL: '',
   },
 }

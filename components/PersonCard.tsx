@@ -1,21 +1,8 @@
-import axios from 'axios'
-import { useState } from 'react'
 import Link from 'next/link'
 import { PersonCardProps } from '../interfaces/personcardprops.interface'
 import styles from '../styles/PersonCard.module.css'
 
-const PersonCard = ({ id, review, published }: PersonCardProps) => {
-
-    const [person, setPerson] = useState<any>([])
-    const [imgURL, setImgURL] = useState<string>('')
-
-    const getUser = async (): Promise<void> => {
-        const res = await axios.get(`${process.env.BASE_URL}/persons/${id}`)
-        setPerson(res.data)
-        setImgURL(res.data.profile_image.name)
-    }
-
-    getUser()
+const PersonCard = ({ review, published, person, imgURL }) => {
 
     return (
         <div>

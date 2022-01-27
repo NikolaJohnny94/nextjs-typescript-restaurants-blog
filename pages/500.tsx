@@ -1,6 +1,6 @@
+import axios from 'axios'
 import { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next'
-import { useContext, useEffect } from 'react'
-import CategoryContext from '../context/category/categoryContext'
+import { useContext } from 'react'
 import ImageContext from '../context/imgs/imageContext'
 import { Row } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,20 +8,10 @@ import { faRobot } from '@fortawesome/free-solid-svg-icons'
 import Layout from '../components/Layout'
 import styles from '../styles/ErrorPage.module.css'
 
-const InternalServerErrorPage: NextPage = ({ HeadProps }: InferGetStaticPropsType<typeof getStaticProps>) => {
-
-    const categoryContext = useContext(CategoryContext)
+const InternalServerErrorPage: NextPage = ({ HeadProps, categories }: InferGetStaticPropsType<typeof getStaticProps>) => {
     const imageContext = useContext(ImageContext)
 
-    const { categories, getCategories } = categoryContext
     const { errorPage } = imageContext.images
-
-    useEffect(() => {
-        if (categories.length === 0) {
-            getCategories()
-        }
-        // eslint-disable-next-line
-    }, [])
 
     return (
         <Layout categories={categories} title={HeadProps.title} description={HeadProps.metas[0].content} imgURL={errorPage}>
@@ -37,8 +27,11 @@ const InternalServerErrorPage: NextPage = ({ HeadProps }: InferGetStaticPropsTyp
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+    const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
+    const categories = categoriesResponse.data
     return {
         props: {
+            categories,
             HeadProps: {
                 title: '500 | Internal Server Error ⚠️ | Next.js, Restaurants Blog 🍴🍝☕',
                 metas: [

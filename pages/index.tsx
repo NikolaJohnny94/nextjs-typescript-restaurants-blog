@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { useState, useEffect, useContext } from 'react'
-import CategoryContext from '../context/category/categoryContext'
 import ImageContext from '../context/imgs/imageContext'
 import { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next'
 import { Row, Col } from 'react-bootstrap'
@@ -11,12 +10,9 @@ import Layout from '../components/Layout'
 import CardComponent from '../components/CardComponent'
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage = ({ restaurants, HeadProps }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home: NextPage = ({ restaurants, HeadProps, categories }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
-  const categoryContext = useContext(CategoryContext)
   const imageContext = useContext(ImageContext)
-
-  const { categories, getCategories } = categoryContext
   const { homePage } = imageContext.images
 
   const [currentItems, setCurrentItems] = useState<InferGetStaticPropsType<typeof getStaticProps>[]>([])
@@ -27,9 +23,6 @@ const Home: NextPage = ({ restaurants, HeadProps }: InferGetStaticPropsType<type
 
   useEffect(() => {
 
-    if (categories.length === 0) {
-      getCategories()
-    }
     const endOffset = itemOffset + itemsPerPage
     setCurrentItems(restaurants.slice(itemOffset, endOffset))
     setPageCount(Math.ceil(restaurants.length / itemsPerPage))
@@ -74,9 +67,12 @@ const Home: NextPage = ({ restaurants, HeadProps }: InferGetStaticPropsType<type
 export const getStaticProps: GetStaticProps = async () => {
   const restaurantResponse = await axios.get(`${process.env.BASE_URL}/restaurants`)
   const restaurants = restaurantResponse.data
+  const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
+  const categories = categoriesResponse.data
   return {
     props: {
       restaurants,
+      categories,
       HeadProps: {
         title: 'Next.js Restaurants Blog 🍴🍝🍰☕ | Next.js ▶️ & Strapi.io 🚀',
         metas: [
