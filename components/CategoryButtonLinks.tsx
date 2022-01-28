@@ -1,7 +1,8 @@
 import Link from "next/link"
+import { CategoriesProp } from "../interfaces/category/cateogries.prop.interface"
 import styles from '../styles/CategoryButtonLinks.module.css'
 
-const CategoryButtonLinks = ({ categories }) => {
+const CategoryButtonLinks = ({ categories }: CategoriesProp) => {
 
     return (
         <div className={`${styles.div} d-flex justify-content-center`}>

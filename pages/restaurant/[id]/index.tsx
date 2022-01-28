@@ -1,24 +1,28 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import { useContext } from 'react'
 import { NextPage, GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next'
 import { useRouter, NextRouter } from 'next/router'
-import { useContext } from 'react'
-import { Button } from 'react-bootstrap'
 import ImageContext from '../../../context/imgs/imageContext'
-import { StaticPaths } from '../../../interfaces/staticpaths.interface'
-import { StaticPathsResponse } from '../../../interfaces/staticpathsresponse.interface'
-import { RestaurantReview } from '../../../interfaces/restaurantreview.interface'
+import { StaticPaths } from '../../../interfaces/other/static.paths.interface'
+import { Restaurant } from '../../../interfaces/restaurant/restaurant.interface'
+import { Review } from '../../../interfaces/restaurant/review.interface'
+import { PersonReview } from '../../../interfaces/person/person.review.interface'
+import { Person } from '../../../interfaces/person/person.interface'
+import { Category } from '../../../interfaces/category/category.interface'
+import { Image } from '../../../interfaces/imgs/image.interface'
 import Layout from '../../../components/Layout'
+import PersonCard from '../../../components/PersonCard'
 import CarouselComponent from '../../../components/CarouselComponent'
 import ReviewContainer from '../../../components/ReviewContainer'
 import CategoryButtonLinks from '../../../components/CategoryButtonLinks'
+import { Button } from 'react-bootstrap'
 import styles from '../../../styles/Restaurant.module.css'
-import PersonCard from '../../../components/PersonCard'
 
+const Restaurant: NextPage = ({ restaurant, HeadProps, categories, personsReviews }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
-
-const Restaurant: NextPage = ({ restaurant, HeadProps, categories, restaurantReviews }: InferGetStaticPropsType<typeof getStaticProps>) => {
     const router: NextRouter = useRouter()
-    const imageContext = useContext(ImageContext)
+
+    const imageContext: Image = useContext(ImageContext)
     const { restaurantPage } = imageContext.images
 
     return (
@@ -30,7 +34,7 @@ const Restaurant: NextPage = ({ restaurant, HeadProps, categories, restaurantRev
                 <div className="ms-1 mt-3 mb-3 me-1"><strong>Description: </strong>{restaurant.description}</div>
                 <h2 className="ms-1 mt-3 mb-3">Reviews:</h2>
                 <ReviewContainer>
-                    {restaurantReviews.map(review => <PersonCard key={review.id} review={review.review} published={review.published} person={review.person} imgURL={review.imgURL} />)}
+                    {personsReviews.map(review => <PersonCard key={review.id} review={review.review} published={review.published} person={review.person} imgURL={review.imgURL} />)}
                     <Button className='mt-3 me-2 ms-2' variant='danger' onClick={() => router.back()}>Back</Button>
                 </ReviewContainer>
             </div>
@@ -41,21 +45,21 @@ const Restaurant: NextPage = ({ restaurant, HeadProps, categories, restaurantRev
 
 export const getStaticProps: GetStaticProps = async (ctx: any) => {
 
-    const restaurantResponse = await axios.get(`${process.env.BASE_URL}/restaurants/${ctx.params.id}`)
-    const restaurant = restaurantResponse.data
+    const restaurantResponse: AxiosResponse<Restaurant> = await axios.get(`${process.env.BASE_URL}/restaurants/${ctx.params.id}`)
+    const restaurant: Restaurant = restaurantResponse.data
 
-    const reviews = restaurant.reviews
+    const reviews: Review[] = restaurant.reviews
 
-    let restaurantReviews: RestaurantReview[] = []
+    let personsReviews: PersonReview[] = []
 
-    reviews.forEach(async personsReview => {
-        const { persons, review, published_at } = personsReview
+    reviews.forEach(async (reviewByPerson): Promise<void> => {
+        const { persons, review, published_at } = reviewByPerson
 
-        let personResponse = await axios.get(`${process.env.BASE_URL}/persons/${persons}`)
-        let person = personResponse.data
+        let personResponse: AxiosResponse<Person> = await axios.get(`${process.env.BASE_URL}/persons/${persons}`)
+        let person: Person = personResponse.data
         let imgURL: string = personResponse.data.profile_image.name
 
-        restaurantReviews.push({
+        personsReviews.push({
             id: persons,
             review: review,
             published: published_at,
@@ -64,15 +68,15 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
         })
     })
 
-    const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
-    const categories = categoriesResponse.data
+    const categoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
+    const categories: Category[] = categoriesResponse.data
 
     return {
         props: {
             restaurant,
             categories,
             reviews,
-            restaurantReviews,
+            personsReviews,
             HeadProps: {
                 title: `${restaurant.name} 🍴👨‍🍳 | Next.js ▶️ & Strapi.io App 🚀`,
                 metas: [
@@ -88,9 +92,9 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
     }
 }
 
-export const getStaticPaths: GetStaticPaths = async (): Promise<StaticPathsResponse> => {
-    const res = await axios.get(`${process.env.BASE_URL}/restaurants/`)
-    const restaurants = res.data
+export const getStaticPaths: GetStaticPaths = async () => {
+    const res: AxiosResponse<Restaurant[]> = await axios.get(`${process.env.BASE_URL}/restaurants/`)
+    const restaurants: Restaurant[] = res.data
     const ids: string[] = restaurants.map(restaurant => restaurant._id)
     const paths: StaticPaths[] = ids.map(id => ({ params: { id: id.toString() } }))
     return {

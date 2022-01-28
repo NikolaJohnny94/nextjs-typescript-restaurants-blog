@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { Card } from 'react-bootstrap'
-import { CardProps } from '../interfaces/cardprops.interface'
+import { CardComponentProps } from '../interfaces/card/card.props.interface'
 import styles from '../styles/CardComponent.module.css'
 
-const CardComponent = ({ id, name, description, image, altText }: CardProps) => {
+const CardComponent = ({ id, name, description, image, altText }: CardComponentProps) => {
 
     return (
         <>

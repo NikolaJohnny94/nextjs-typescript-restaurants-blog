@@ -1,7 +1,7 @@
 import { NextComponentType } from 'next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faLinkedinIn, faCodepen, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { Icon } from '../interfaces/icon.interface'
+import { Icon } from '../interfaces/other/icon.interface'
 import styles from '../styles/Footer.module.css'
 
 const Footer: NextComponentType = () => {

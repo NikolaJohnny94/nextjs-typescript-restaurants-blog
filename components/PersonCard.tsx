@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { PersonCardProps } from '../interfaces/personcardprops.interface'
+import { PersonCardProps } from '../interfaces/card/person.card.props.interface'
 import styles from '../styles/PersonCard.module.css'
 
-const PersonCard = ({ review, published, person, imgURL }) => {
+const PersonCard = ({ review, published, person, imgURL }: PersonCardProps) => {
 
     return (
         <div>

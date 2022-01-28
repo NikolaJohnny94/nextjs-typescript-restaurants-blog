@@ -1,12 +1,14 @@
 import { useContext } from 'react'
 import Link from 'next/link'
-import { Navbar, NavDropdown, Container, Nav } from 'react-bootstrap'
 import ImageContext from '../context/imgs/imageContext'
+import { Image } from '../interfaces/imgs/image.interface'
+import { CategoriesProp } from '../interfaces/category/cateogries.prop.interface'
+import { Navbar, NavDropdown, Container, Nav } from 'react-bootstrap'
 import styles from '../styles/NavComponent.module.css'
 
-const NavComponent = ({ categories }) => {
+const NavComponent = ({ categories }: CategoriesProp) => {
 
-    const imageContext = useContext(ImageContext)
+    const imageContext: Image = useContext(ImageContext)
     const { url, title, alt } = imageContext.images.navComponent
 
     return (

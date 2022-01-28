@@ -1,8 +1,9 @@
+import Head from 'next/head'
 import NavComponent from './NavComponent'
 import Footer from './Footer'
-import Head from 'next/head'
+import { LayoutProps } from '../interfaces/layouts_props/layout.props.interface'
 
-const Layout = ({ children, categories, title, description, imgURL }) => {
+const Layout = ({ children, categories, title, description, imgURL }: LayoutProps) => {
 
     return (
         <>

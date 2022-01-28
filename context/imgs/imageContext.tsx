@@ -1,7 +1,6 @@
 import { createContext } from 'react'
-import { Images } from '../../interfaces/images.interface'
+import { Image } from '../../interfaces/imgs/image.interface'
 
-
-const ImageContext = createContext<Images>({} as Images)
+const ImageContext = createContext<Image>({} as Image)
 
 export default ImageContext

@@ -1,4 +1,4 @@
-export interface Images {
+export interface Image {
     images: {
         categoryPage: string,
         personPage: string,

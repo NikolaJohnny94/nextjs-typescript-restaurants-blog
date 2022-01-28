@@ -1,4 +1,4 @@
-export interface RestaurantReview {
+export interface PersonReview {
     id: string,
     review: string,
     published: string,

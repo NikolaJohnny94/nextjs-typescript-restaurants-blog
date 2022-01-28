@@ -1,33 +1,35 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { useState, useEffect, useContext } from 'react'
-import ImageContext from '../../../context/imgs/imageContext'
 import { NextPage, GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next'
 import { useRouter, NextRouter } from 'next/router'
+import ImageContext from '../../../context/imgs/imageContext'
+import { Category } from '../../../interfaces/category/category.interface'
+import { StaticPaths } from '../../../interfaces/other/static.paths.interface'
+import { Image } from '../../../interfaces/imgs/image.interface'
+import { Restaurant } from '../../../interfaces/restaurant/restaurant.interface'
+import CardComponent from '../../../components/CardComponent'
+import Layout from '../../../components/Layout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { Row, Col, Button } from 'react-bootstrap'
 import ReactPaginate from 'react-paginate'
-import { StaticPaths } from '../../../interfaces/staticpaths.interface'
-import { StaticPathsResponse } from '../../../interfaces/staticpathsresponse.interface'
-import CardComponent from '../../../components/CardComponent'
-import Layout from '../../../components/Layout'
 import styles from '../../../styles/CategoryPage.module.css'
 
 const Category: NextPage = ({ category, HeadProps, allCategories }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
     const router: NextRouter = useRouter()
-    const imageContext = useContext(ImageContext)
 
+    const imageContext: Image = useContext(ImageContext)
     const { categoryPage } = imageContext.images
 
-    const [currentItems, setCurrentItems] = useState<InferGetStaticPropsType<typeof getStaticProps>[]>([])
+    const [currentItems, setCurrentItems] = useState<Restaurant[]>([])
     const [pageCount, setPageCount] = useState<number>(0)
     const [itemOffset, setItemOffset] = useState<number>(0)
 
     const itemsPerPage: number = 8
 
     useEffect(() => {
-        const endOffset = itemOffset + itemsPerPage
+        const endOffset: number = itemOffset + itemsPerPage
         setCurrentItems(category.restaurants.slice(itemOffset, endOffset))
         setPageCount(Math.ceil(category.restaurants.length / itemsPerPage))
         // eslint-disable-next-line
@@ -72,10 +74,11 @@ const Category: NextPage = ({ category, HeadProps, allCategories }: InferGetStat
 }
 
 export const getStaticProps: GetStaticProps = async (ctx: any) => {
-    const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories/${ctx.params.id}`)
-    const category = categoriesResponse.data
-    const allCategoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
-    const allCategories = allCategoriesResponse.data
+    const categoriesResponse: AxiosResponse<Category> = await axios.get(`${process.env.BASE_URL}/categories/${ctx.params.id}`)
+    const category: Category = categoriesResponse.data
+
+    const allCategoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
+    const allCategories: Category[] = allCategoriesResponse.data
     return {
         props: {
             category,
@@ -94,9 +97,9 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
     }
 }
 
-export const getStaticPaths: GetStaticPaths = async (): Promise<StaticPathsResponse> => {
-    const res = await axios.get(`${process.env.BASE_URL}/categories`)
-    const categories = res.data
+export const getStaticPaths: GetStaticPaths = async () => {
+    const res: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
+    const categories: Category[] = res.data
     const ids: string[] = categories.map(category => category._id)
     const paths: StaticPaths[] = ids.map(id => ({ params: { id: id.toString() } }))
     return {

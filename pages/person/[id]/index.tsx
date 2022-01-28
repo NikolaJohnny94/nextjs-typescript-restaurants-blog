@@ -1,21 +1,22 @@
-import axios from 'axios'
-import { NextPage, GetStaticProps, InferGetStaticPropsType, GetStaticPaths, } from 'next'
-import { useRouter, NextRouter } from 'next/router'
+import axios, { AxiosResponse } from 'axios'
 import { useContext } from 'react'
+import { NextPage, GetStaticProps, InferGetStaticPropsType, GetStaticPaths } from 'next'
+import { useRouter, NextRouter } from 'next/router'
 import ImageContext from '../../../context/imgs/imageContext'
-import Button from 'react-bootstrap/Button'
-import { StaticPaths } from '../../../interfaces/staticpaths.interface'
-import { StaticPathsResponse } from '../../../interfaces/staticpathsresponse.interface'
+import { Person } from '../../../interfaces/person/person.interface'
+import { Category } from '../../../interfaces/category/category.interface'
+import { StaticPaths } from '../../../interfaces/other/static.paths.interface'
+import { Image } from '../../../interfaces/imgs/image.interface'
 import Layout from '../../../components/Layout'
+import Button from 'react-bootstrap/Button'
 import styles from '../../../styles/PersonPage.module.css'
 
 const Person: NextPage = ({ person, profileImage, HeadProps, categories }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
     const router: NextRouter = useRouter()
 
-    const imageContext = useContext(ImageContext)
+    const imageContext: Image = useContext(ImageContext)
     const { personPage } = imageContext.images
-
 
     return (
         <Layout categories={categories} title={HeadProps.title} description={HeadProps.metas[0].content} imgURL={personPage}>
@@ -33,12 +34,14 @@ const Person: NextPage = ({ person, profileImage, HeadProps, categories }: Infer
     )
 }
 
-export const getStaticProps: GetStaticProps = async (ctx: any) => {
-    const responsePerson = await axios.get(`${process.env.BASE_URL}/persons/${ctx.params.id}`)
-    const person = responsePerson.data
+export const getStaticProps: GetStaticProps = async (context: any) => {
+    const responsePerson: AxiosResponse<Person> = await axios.get(`${process.env.BASE_URL}/persons/${context.params.id}`)
+    const person: Person = responsePerson.data
     const profileImage: string = person.profile_image.name
-    const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
-    const categories = categoriesResponse.data
+
+    const categoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
+    const categories: Category[] = categoriesResponse.data
+
     return {
         props: {
             person,
@@ -58,9 +61,9 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
     }
 }
 
-export const getStaticPaths: GetStaticPaths = async (): Promise<StaticPathsResponse> => {
-    const res = await axios.get(`${process.env.BASE_URL}/persons`)
-    const persons = res.data
+export const getStaticPaths: GetStaticPaths = async () => {
+    const res: AxiosResponse<Person[]> = await axios.get(`${process.env.BASE_URL}/persons`)
+    const persons: Person[] = res.data
     const ids: string[] = persons.map(person => person._id)
     const paths: StaticPaths[] = ids.map(id => ({ params: { id: id.toString() } }))
     return {

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { useState, useEffect, useContext } from 'react'
 import ImageContext from '../context/imgs/imageContext'
 import { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next'
@@ -8,22 +8,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import Layout from '../components/Layout'
 import CardComponent from '../components/CardComponent'
+import { Restaurant } from '../interfaces/restaurant/restaurant.interface'
+import { Category } from '../interfaces/category/category.interface'
+import { Image } from '../interfaces/imgs/image.interface'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = ({ restaurants, HeadProps, categories }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
-  const imageContext = useContext(ImageContext)
+  const imageContext: Image = useContext(ImageContext)
   const { homePage } = imageContext.images
 
-  const [currentItems, setCurrentItems] = useState<InferGetStaticPropsType<typeof getStaticProps>[]>([])
+  const [currentItems, setCurrentItems] = useState<Restaurant[]>([])
   const [pageCount, setPageCount] = useState<number>(0)
   const [itemOffset, setItemOffset] = useState<number>(0)
 
   const itemsPerPage: number = 8
 
   useEffect(() => {
-
-    const endOffset = itemOffset + itemsPerPage
+    const endOffset: number = itemOffset + itemsPerPage
     setCurrentItems(restaurants.slice(itemOffset, endOffset))
     setPageCount(Math.ceil(restaurants.length / itemsPerPage))
     // eslint-disable-next-line
@@ -65,10 +67,13 @@ const Home: NextPage = ({ restaurants, HeadProps, categories }: InferGetStaticPr
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const restaurantResponse = await axios.get(`${process.env.BASE_URL}/restaurants`)
-  const restaurants = restaurantResponse.data
-  const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
-  const categories = categoriesResponse.data
+
+  const restaurantResponse: AxiosResponse<Restaurant[]> = await axios.get(`${process.env.BASE_URL}/restaurants`)
+  const restaurants: Restaurant[] = restaurantResponse.data
+
+  const categoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
+  const categories: Category[] = categoriesResponse.data
+
   return {
     props: {
       restaurants,

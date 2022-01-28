@@ -32,6 +32,7 @@ ul.pagination {
 
 .dropdown-item:active {
   color: #fff !important;
+  font-weight: 600;
 }
 
 #basic-nav-dropdown {
@@ -99,17 +100,16 @@ span.navbar-brand {
     text-align: center;
   }
 
-  .dropdown-item:hover {
-    background-color: transparent;
-  }
-
   .dropdown-menu .dropdown-item {
     color: #fff !important;
   }
 
-  .dropdown-item:active a,
-  .dropdown-item:hover a {
+  .dropdown-item:active,
+  .dropdown-item:hover {
     color: rgb(45, 85, 196) !important;
+  }
+  .dropdown-item:active {
+    font-weight: bold;
   }
 
   .dropdown-item:active {

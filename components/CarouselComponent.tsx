@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { Carousel } from "react-bootstrap"
+import { ImageProps } from "../interfaces/imgs/image.prop.interface"
 import styles from '../styles/CarouselComponent.module.css'
 
-const CarouselComponent = ({ images }) => {
+const CarouselComponent = ({ images }: ImageProps) => {
 
   const [index, setIndex] = useState<number>(0)
 

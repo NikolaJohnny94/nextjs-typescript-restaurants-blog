@@ -1,16 +1,17 @@
-import axios from 'axios'
-import { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next'
+import axios, { AxiosResponse } from 'axios'
 import { useContext } from 'react'
+import { NextPage, GetStaticProps, InferGetStaticPropsType } from 'next'
 import ImageContext from '../context/imgs/imageContext'
+import { Category } from '../interfaces/category/category.interface'
+import { Image } from '../interfaces/imgs/image.interface'
+import Layout from '../components/Layout'
 import { Row } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRobot } from '@fortawesome/free-solid-svg-icons'
-import Layout from '../components/Layout'
 import styles from '../styles/ErrorPage.module.css'
 
 const InternalServerErrorPage: NextPage = ({ HeadProps, categories }: InferGetStaticPropsType<typeof getStaticProps>) => {
-    const imageContext = useContext(ImageContext)
-
+    const imageContext: Image = useContext(ImageContext)
     const { errorPage } = imageContext.images
 
     return (
@@ -27,8 +28,8 @@ const InternalServerErrorPage: NextPage = ({ HeadProps, categories }: InferGetSt
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-    const categoriesResponse = await axios.get(`${process.env.BASE_URL}/categories`)
-    const categories = categoriesResponse.data
+    const categoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
+    const categories: Category[] = categoriesResponse.data
     return {
         props: {
             categories,
