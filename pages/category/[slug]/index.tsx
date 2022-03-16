@@ -74,11 +74,21 @@ const Category: NextPage = ({ category, HeadProps, allCategories }: InferGetStat
 }
 
 export const getStaticProps: GetStaticProps = async (ctx: any) => {
-    const categoriesResponse: AxiosResponse<Category> = await axios.get(`${process.env.BASE_URL}/categories/${ctx.params.id}`)
-    const category: Category = categoriesResponse.data
+    const categoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
+    const allCategories: Category[] = categoriesResponse.data
 
-    const allCategoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
-    const allCategories: Category[] = allCategoriesResponse.data
+    let currentRestaurantID: any
+
+    allCategories.forEach(category => {
+        if (ctx.params.slug === category.name.replace(' ', '-').toLowerCase()) {
+            currentRestaurantID = category.id
+        }
+    })
+
+    const categoryResponse: AxiosResponse<Category> = await axios.get(`${process.env.BASE_URL}/categories/${currentRestaurantID}`)
+    const category: Category = categoryResponse.data
+
+
     return {
         props: {
             category,
@@ -100,8 +110,8 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
 export const getStaticPaths: GetStaticPaths = async () => {
     const res: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
     const categories: Category[] = res.data
-    const ids: string[] = categories.map(category => category._id)
-    const paths: StaticPaths[] = ids.map(id => ({ params: { id: id.toString() } }))
+    const slugs: string[] = categories.map(category => category.name.replace(' ', '-').toLowerCase())
+    const paths: StaticPaths[] = slugs.map(slug => ({ params: { slug: slug.toString() } }))
     return {
         paths,
         fallback: false

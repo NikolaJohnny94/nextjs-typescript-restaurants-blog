@@ -8,7 +8,7 @@ const PersonCard = ({ review, published, person, imgURL }: PersonCardProps) => {
         <div>
             {
                 imgURL &&
-                <Link href={`/person/${person._id}`} passHref>
+                <Link href={`/person/${person.username}`} passHref>
                     <img
                         className={`${styles.img} m-2`}
                         src={imgURL}

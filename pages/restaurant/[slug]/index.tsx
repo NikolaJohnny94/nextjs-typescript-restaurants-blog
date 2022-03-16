@@ -44,8 +44,15 @@ const Restaurant: NextPage = ({ restaurant, HeadProps, categories, personsReview
 }
 
 export const getStaticProps: GetStaticProps = async (ctx: any) => {
+    const RestaurantsResponse: AxiosResponse<Restaurant[]> = await axios.get(`${process.env.BASE_URL}/restaurants`)
+    let currentRestaurantID: any
 
-    const restaurantResponse: AxiosResponse<Restaurant> = await axios.get(`${process.env.BASE_URL}/restaurants/${ctx.params.id}`)
+    RestaurantsResponse.data.forEach(restaurant => {
+        if (ctx.params.slug === restaurant.name.replace(' ', '-').toLowerCase()) {
+            currentRestaurantID = restaurant.id
+        }
+    })
+    const restaurantResponse: AxiosResponse<Restaurant> = await axios.get(`${process.env.BASE_URL}/restaurants/${currentRestaurantID}`)
     const restaurant: Restaurant = restaurantResponse.data
 
     const reviews: Review[] = restaurant.reviews
@@ -95,8 +102,8 @@ export const getStaticProps: GetStaticProps = async (ctx: any) => {
 export const getStaticPaths: GetStaticPaths = async () => {
     const res: AxiosResponse<Restaurant[]> = await axios.get(`${process.env.BASE_URL}/restaurants/`)
     const restaurants: Restaurant[] = res.data
-    const ids: string[] = restaurants.map(restaurant => restaurant._id)
-    const paths: StaticPaths[] = ids.map(id => ({ params: { id: id.toString() } }))
+    const slugs: string[] = restaurants.map(restaurant => restaurant.name.replace(' ', '-').toLowerCase())
+    const paths: StaticPaths[] = slugs.map(slug => ({ params: { slug: slug.toString() } }))
     return {
         paths,
         fallback: false,

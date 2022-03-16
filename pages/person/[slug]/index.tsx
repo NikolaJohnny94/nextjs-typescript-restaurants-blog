@@ -35,8 +35,16 @@ const Person: NextPage = ({ person, profileImage, HeadProps, categories }: Infer
 }
 
 export const getStaticProps: GetStaticProps = async (context: any) => {
-    const responsePerson: AxiosResponse<Person> = await axios.get(`${process.env.BASE_URL}/persons/${context.params.id}`)
-    const person: Person = responsePerson.data
+    const PersonsResponse: AxiosResponse<Person[]> = await axios.get(`${process.env.BASE_URL}/persons`)
+    let currentRestaurantID: any
+
+    PersonsResponse.data.forEach(person => {
+        if (person.username === context.params.slug) {
+            currentRestaurantID = person.id
+        }
+    })
+    const personResponse: AxiosResponse<Person> = await axios.get(`${process.env.BASE_URL}/persons/${currentRestaurantID}`)
+    const person: Person = personResponse.data
     const profileImage: string = person.profile_image.name
 
     const categoriesResponse: AxiosResponse<Category[]> = await axios.get(`${process.env.BASE_URL}/categories`)
@@ -64,8 +72,8 @@ export const getStaticProps: GetStaticProps = async (context: any) => {
 export const getStaticPaths: GetStaticPaths = async () => {
     const res: AxiosResponse<Person[]> = await axios.get(`${process.env.BASE_URL}/persons`)
     const persons: Person[] = res.data
-    const ids: string[] = persons.map(person => person._id)
-    const paths: StaticPaths[] = ids.map(id => ({ params: { id: id.toString() } }))
+    const slugs: string[] = persons.map(person => person.username)
+    const paths: StaticPaths[] = slugs.map(slug => ({ params: { slug: slug.toString() } }))
     return {
         paths,
         fallback: false

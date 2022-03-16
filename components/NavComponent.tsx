@@ -20,7 +20,7 @@ const NavComponent = ({ categories }: CategoriesProp) => {
                     <Navbar.Collapse className='justify-content-end' id="basic-navbar-nav">
                         <Nav>
                             <NavDropdown title="Categories" id="basic-nav-dropdown" className={`${styles.dropdownCategories} text-light`}>
-                                {categories.map(category => (<Link href={`/category/${category._id}`} passHref key={category._id}><li className='text-center dropdown-item'>{category.name}</li></Link>))}
+                                {categories.map(category => (<Link href={`/category/${category.name.replace(' ', '-').toLowerCase()}`} passHref key={category._id}><li className='text-center dropdown-item'>{category.name}</li></Link>))}
                             </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>

@@ -6,7 +6,7 @@ const CategoryButtonLinks = ({ categories }: CategoriesProp) => {
 
     return (
         <div className={`${styles.div} d-flex justify-content-center`}>
-            {categories.map(category => (<Link href={`/category/${category._id}`} key={category._id} passHref><span className={`d-block bg-success text-light mt-4 me-3 p-2`} key={category._id} title={`${category.name} Category`}>{category.name}</span></Link>))}
+            {categories.map(category => (<Link href={`/category/${category.name.replace(' ', '-').toLowerCase()}`} key={category._id} passHref><span className={`d-block bg-success text-light mt-4 me-3 p-2`} key={category._id} title={`${category.name} Category`}>{category.name}</span></Link>))}
         </div>
     )
 }

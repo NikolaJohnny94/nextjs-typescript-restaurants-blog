@@ -7,7 +7,7 @@ const CardComponent = ({ id, name, description, image, altText }: CardComponentP
 
     return (
         <>
-            <Link href={`/restaurant/${id}`} passHref>
+            <Link href={`/restaurant/${name.replace(' ', '-').toLowerCase()}`} passHref>
                 <Card className={`${styles.cardComponent} mt-4 ms-3 me-3`} title={name}>
                     <Card.Img className={styles.image} variant="top" src={image} alt={altText} />
                     <Card.Body>
